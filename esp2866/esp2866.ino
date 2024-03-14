@@ -40,42 +40,24 @@ void setup()
     config.api_key = API_KEY;
     config.database_url = DATABASE_URL;
     Firebase.reconnectNetwork(true);
-    fbdo.setBSSLBufferSize(4096 /* Rx buffer size in bytes from 512 - 16384 */, 1024 /* Tx buffer size in bytes from 512 - 16384 */);
+    fbdo.setBSSLBufferSize(4096, 1024 );
+    fbdo.setResponseSize(4096);
 
-    Serial.print("Sign up new user... ");
+    String base_path = "/UsersData/";
 
-    /* Sign up */
-    if (Firebase.signUp(&config, &auth, "", "")){
-        Serial.println("ok");
-        signupOK = true;
-    } else{
-        Serial.printf("%s\n", config.signer.signupError.message.c_str());
-    }
-
+    auth.user.email = FIREBASE_USER_EMAIL;
+    auth.user.password = FIREBASE_USER_PASSWORD;
     config.token_status_callback = tokenStatusCallback;
     Firebase.begin(&config, &auth);
+    Serial.print("SETUP DONE");
 }
 
 void loop()
 {
-    // Firebase.ready() should be called repeatedly to handle authentication tasks.
-
-    if (millis() - dataMillis > 5000 && signupOK && Firebase.ready())
-    {
-        dataMillis = millis();
-        String path = auth.token.uid.c_str(); //<- user uid
-        path += "/test/int";
-        Serial.printf("Set int... %s\n", Firebase.setInt(fbdo, path, count++) ? "ok" : fbdo.errorReason().c_str());
-
-        // if (count == 10)
-        // {
-        //     Serial.print("Delete user... ");
-        //     if (Firebase.deleteUser(&config, &auth /* third argument can be the id token of active user to delete or leave it blank to delete current user */))
-        //     {
-        //         Serial.println("ok");
-        //     }
-        //     else
-        //         Serial.printf("%s\n", config.signer.deleteError.message.c_str());
-        // }
-    }
+    Serial.print("loop1");
+    dataMillis = millis();
+    String path = auth.token.uid.c_str(); //<- user uid
+    path += "/test/int";
+    Serial.printf("Set int... %s\n", Firebase.setInt(fbdo, path, count++) ? "ok" : fbdo.errorReason().c_str());
+    delay(1000);
 }
