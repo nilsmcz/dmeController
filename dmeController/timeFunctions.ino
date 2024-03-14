@@ -113,5 +113,5 @@ bool isTimeInTimelist(Time time, Time timelist[], int numElements, int timeRange
     }
   }
 
-  return false; // Time not found in the list
+  return false;
 }

@@ -1,9 +1,11 @@
 #include "Arduino.h"
 #include "uRTCLib.h"
-#include "timeFunctions.h"  // Füge die Header-Datei hinzu, die die Funktionen und Strukturen enthält
+#include "timeFunctions.h"
 
 const int relayContact = A0;
 int relayContactValue = 0;
+
+const int relayLampPin = 7;
 
 const int alarmLed = 7;
 
@@ -11,15 +13,17 @@ const int alarmLed = 7;
 Time testAlarmTimes[] = {
   {18, 0, 0, -1, -1, -1, 6},        // Freitag um 18:00 Uhr
   {12, 0, 0, -1, -1, -1, 7},        // Samstag um 12:00 Uhr
-  {12, 31, 0, -1, -1, -1, 6}        // TEST
+  {12, 31, 0, -1, -1, -1, -1}        // TEST
 };
 const int numAlarms = sizeof(testAlarmTimes) / sizeof(testAlarmTimes[0]);
 
 void setup() {
   Serial.begin(9600);
+  Serial.println("Start");
   URTCLIB_WIRE.begin();
   pinMode(relayContact, INPUT);
   pinMode(alarmLed, OUTPUT);
+  pinMode(relayLampPin, OUTPUT);
 }
 
 void loop() {
@@ -47,8 +51,10 @@ void alarm(){
   }
 
   alarmSubRic = "a";
+  digitalWrite(7, HIGH);
   Serial.println("Einsatzalarm");
   delay(1000 * 30);
+  digitalWrite(7, LOW);
   Serial.println("---reset---");
   Serial.println("");
   return;
