@@ -1,17 +1,10 @@
 #include "Arduino.h"
 #include "uRTCLib.h"
+#include "timeFunctions.h"
 
 uRTCLib rtc(0x68);
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-// Array von Zeitpunkten für Probe-/Info-/Testalarme
-Time testAlarmTimes[] = {
-  {18, 0, 0, -1, -1, -1, 6},        // Freitag um 18:00 Uhr
-  {12, 0, 0, -1, -1, -1, 7},        // Samstag um 12:00 Uhr
-  {12, 31, 0, -1, -1, -1, 6}        // TEST
-};
-const int numAlarms = sizeof(testAlarmTimes) / sizeof(testAlarmTimes[0]);
 
 /**
  * Sets the date and time on the Real Time Clock (RTC) module.
@@ -122,13 +115,3 @@ bool isTimeInTimelist(Time time, Time timelist[], int numElements, int timeRange
 
   return false; // Time not found in the list
 }
-
-void timeTest(){
-  rtc.refresh();
-  Time now = getCurrentTime();
-  // Serial.println(now.dayOfWeek);
-  // Time zeitpunkt1 = {11, 41, 0, -1, -1, 24};
-  // Serial.println( isTimeWithinRange(now, zeitpunkt1, 120) );
-  // Serial.println( isTimeInTimelist(now, testAlarmTimes, numAlarms, 120) );
-}
-
