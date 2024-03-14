@@ -5,6 +5,14 @@ uRTCLib rtc(0x68);
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
+// Array von Zeitpunkten für Probe-/Info-/Testalarme
+Time testAlarmTimes[] = {
+  {18, 0, 0, -1, -1, -1, 6},        // Freitag um 18:00 Uhr
+  {12, 0, 0, -1, -1, -1, 7},        // Samstag um 12:00 Uhr
+  {12, 31, 0, -1, -1, -1, 6}        // TEST
+};
+const int numAlarms = sizeof(testAlarmTimes) / sizeof(testAlarmTimes[0]);
+
 /**
  * Sets the date and time on the Real Time Clock (RTC) module.
  * @param second The second (0-59).
@@ -14,34 +22,79 @@ char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
  * @param dayOfMonth The day of the month (1-31).
  * @param month The month (1-12).
 */
-void setTime(int second, int minute, int hour, int dayOfWeek, int dayOfMonth, int month, int year){
+void setRtcModuleTime(int second, int minute, int hour, int dayOfWeek, int dayOfMonth, int month, int year){
    rtc.set(second, minute, hour, dayOfWeek, dayOfMonth, month, year);
 }
 
 /**
- * Checks if the current time is within a specified time range around a constant time.
+ * Retrieves the current time from the Real Time Clock (RTC) module.
  * 
- * @param constantHour       The constant hour.
- * @param constantMinute     The constant minute.
- * @param constantSecond     The constant second.
- * @param timeRangeSeconds   The time range in seconds around the constant time.
+ * This function refreshes the RTC module to ensure it provides the most up-to-date time,
+ * then retrieves the current hour, minute, second, day, month, and year from the module.
  * 
- * @return True if the current time is within the specified time range around the constant time, otherwise false.
+ * @return A Time structure representing the current time, including hour, minute, second,
+ *         day of the month, month, and year.
  */
-bool isNearConstantTime(int constantHour, int constantMinute, int constantSecond, int timeRangeSeconds) {
-  // Get current time from RTC module
+Time getCurrentTime() {
   rtc.refresh();
-  int currentHour = rtc.hour();
-  int currentMinute = rtc.minute();
-  int currentSecond = rtc.second();
 
-  // Convert times to seconds
-  int constantTotalSeconds = constantHour * 3600 + constantMinute * 60 + constantSecond;
-  int currentTotalSeconds = currentHour * 3600 + currentMinute * 60 + currentSecond;
+  Time currentTime = {
+    rtc.hour(),
+    rtc.minute(),
+    rtc.second(),
+    rtc.day(),
+    rtc.month(),
+    rtc.year(),
+    rtc.dayOfWeek(),
+  };
 
-  // Check whether the current time is within the specified time range around constant time
-  if (currentTotalSeconds >= constantTotalSeconds - timeRangeSeconds && 
-      currentTotalSeconds <= constantTotalSeconds + timeRangeSeconds) {
+  return currentTime;
+}
+
+/**
+ * Checks if the given time is within a specified range around a reference time.
+ * 
+ * @param time The given time.
+ * @param reference The reference time.
+ * @param timeRangeSeconds The time range in seconds around the reference time.
+ * 
+ * @return True if the given time is within the specified time range around the reference time, otherwise false.
+ */
+bool isTimeWithinRange(Time time, Time reference, int timeRangeSeconds) {
+
+  if(time.year >= 0 && reference.year >= 0){
+    if(time.year != reference.year){
+      // Serial.println("Wrong year");
+      return false;
+    }
+  }
+
+  if(time.month >= 0 && reference.month >= 0){
+    if(time.month != reference.month){
+      // Serial.println("Wrong month");
+      return false;
+    }
+  }
+
+  if(time.day >= 0 && reference.day >= 0){
+    if(time.day != reference.day){
+      // Serial.println("Wrong day");
+      return false;
+    }
+  }
+
+  if(time.dayOfWeek >= 0 && reference.dayOfWeek >= 0){
+    if(time.dayOfWeek != reference.dayOfWeek){
+      // Serial.println("Wrong dayOfWeek");
+      return false;
+    }
+  }
+
+  // // Convert the given time and reference time to seconds
+  unsigned long timeTotalSeconds = time.hour * 3600 + time.minute * 60 + time.second;
+  unsigned long referenceTotalSeconds = reference.hour * 3600 + reference.minute * 60 + reference.second;
+
+  if (timeTotalSeconds >= referenceTotalSeconds - timeRangeSeconds && timeTotalSeconds <= referenceTotalSeconds + timeRangeSeconds) {
     return true;
   } else {
     return false;
@@ -49,53 +102,33 @@ bool isNearConstantTime(int constantHour, int constantMinute, int constantSecond
 }
 
 /**
- * Checks if the current date matches a specified constant date.
+ * Checks if the given time falls within the time range of any time point in the list.
  * 
- * @param constantDay   The constant day of the month (1-31).
- * @param constantMonth The constant month (1-12).
- * @param constantYear  The constant year.
+ * @param time The time to be checked.
+ * @param timelist The array containing time points to compare against.
+ * @param numElements The number of elements in the timelist array.
+ * @param timeRangeSeconds The time range in seconds to consider (optional).
+ *                         Defaults to 0 if not provided.
  * 
- * @return True if the current date matches the specified constant date, otherwise false.
+ * @return True if the given time falls within the time range of any time point in the list, otherwise false.
  */
-bool isSameDate(int constantDay, int constantMonth, int constantYear) {
-  // Retrieve current date from the RTC module
-  rtc.refresh();
-  int currentDay = rtc.day();
-  int currentMonth = rtc.month();
-  int currentYear = rtc.year();
+bool isTimeInTimelist(Time time, Time timelist[], int numElements, int timeRangeSeconds = 0) {
 
-  // Check if the current date matches the specified constant date
-  if (currentDay == constantDay && currentMonth == constantMonth && currentYear == constantYear) {
-    return true;
-  } else {
-    return false;
+  for (int i = 0; i < numElements; ++i) {
+    if(isTimeWithinRange(time, timelist[i], timeRangeSeconds)){
+      return true;
+    }
   }
+
+  return false; // Time not found in the list
 }
 
-void rtcTest(){
+void timeTest(){
   rtc.refresh();
-
-  // Serial.print("Current Date & Time: ");
-  // Serial.print(rtc.year());
-  // Serial.print('/');
-  // Serial.print(rtc.month());
-  // Serial.print('/');
-  // Serial.print(rtc.day());
-
-  // Serial.print(" (");
-  // Serial.print(daysOfTheWeek[rtc.dayOfWeek()-1]);
-  // Serial.print(") ");
-
-  Serial.print(rtc.hour());
-  Serial.print(':');
-  Serial.print(rtc.minute());
-  Serial.print(':');
-  Serial.println(rtc.second());
-
-  // Serial.print("Temperature: ");
-  // Serial.print(rtc.temp()  / 100);
-  // Serial.print("\xC2\xB0");   //shows degrees character
-  // Serial.println("C");
-
-  delay(500);  
+  Time now = getCurrentTime();
+  // Serial.println(now.dayOfWeek);
+  // Time zeitpunkt1 = {11, 41, 0, -1, -1, 24};
+  // Serial.println( isTimeWithinRange(now, zeitpunkt1, 120) );
+  // Serial.println( isTimeInTimelist(now, testAlarmTimes, numAlarms, 120) );
 }
+
