@@ -25,7 +25,7 @@ void setup(){
 
 void loop(){
   String path = "/UsersData/" + getUserUid() + "/counter";
-  int counterValue;
+  long counterValue;
 
   if (Firebase.RTDB.getInt(&fbdo, path)) {
 
