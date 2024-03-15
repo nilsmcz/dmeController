@@ -6,6 +6,9 @@
 #include "Secrets.h"
 #include "firebaseFunctions.h"
 #include "wifiFunctions.h"
+#include <SoftwareSerial.h>
+
+SoftwareSerial s(12, 14);  //(RX, TX) - D6 maps to GPIO 12 and D5 maps to GPIO 14
 
 FirebaseData fbdo;
 FirebaseAuth auth;
@@ -14,32 +17,38 @@ FirebaseConfig config;
 unsigned long dataMillis = 0;
 int count = 0;
 
-void setup(){
-    Serial.begin(115200);
+void setup() {
+  s.begin(9600);
+  Serial.begin(115200);
 
-    connectWifi(WIFI_SSID, WIFI_PASSWORD);
+  connectWifi(WIFI_SSID, WIFI_PASSWORD);
 
-    printFirebaseClientVersion();
-    connectFirebaseWithEmail(API_KEY, DATABASE_URL, FIREBASE_USER_EMAIL, FIREBASE_USER_PASSWORD);
+  printFirebaseClientVersion();
+  connectFirebaseWithEmail(API_KEY, DATABASE_URL, FIREBASE_USER_EMAIL, FIREBASE_USER_PASSWORD);
 }
 
-void loop(){
+void loop() {
   String path = "/UsersData/" + getUserUid() + "/counter";
-  long counterValue;
+  long counterValue = 100;
+  char alarmSubRic = s.read();
 
-  if (Firebase.RTDB.getInt(&fbdo, path)) {
-
-    if (fbdo.dataTypeEnum() == firebase_rtdb_data_type_integer) {
-      counterValue = fbdo.to<int>();
-      counterValue++;
-      Firebase.RTDB.setInt(&fbdo, path, counterValue);
-    }
-
-  } else {
-    Serial.println(fbdo.errorReason());
-    Serial.println("No last counter value!");
-    Firebase.RTDB.setInt(&fbdo, path, 0);
+  if (alarmSubRic == 'a') {
+    Firebase.RTDB.setInt(&fbdo, path, 100);
+    Serial.println("Einsatzalarm");
   }
-  
-  delay(1000);
+  // if (Firebase.RTDB.getInt(&fbdo, path)) {
+
+  //   if (fbdo.dataTypeEnum() == firebase_rtdb_data_type_integer) {
+  //     counterValue = fbdo.to<int>();
+  //     counterValue++;
+  //     Firebase.RTDB.setInt(&fbdo, path, counterValue);
+  //   }
+
+  // } else {
+  //   Serial.println(fbdo.errorReason());
+  //   Serial.println("No last counter value!");
+  //   Firebase.RTDB.setInt(&fbdo, path, 0);
+  // }
+
+  delay(100);
 }

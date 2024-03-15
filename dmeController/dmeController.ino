@@ -1,6 +1,9 @@
 #include "Arduino.h"
 #include "uRTCLib.h"
 #include "timeFunctions.h"
+#include <SoftwareSerial.h>
+
+SoftwareSerial s(5, 6); //(RX, TX)
 
 const int relayContact = A0;
 int relayContactValue = 0;
@@ -18,8 +21,8 @@ Time testAlarmTimes[] = {
 const int numAlarms = sizeof(testAlarmTimes) / sizeof(testAlarmTimes[0]);
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println("Start");
+  s.begin(9600);
+  Serial.begin(4800);
   URTCLIB_WIRE.begin();
   pinMode(relayContact, INPUT);
   pinMode(alarmLed, OUTPUT);
@@ -53,6 +56,7 @@ void alarm(){
   alarmSubRic = "a";
   digitalWrite(7, HIGH);
   Serial.println("Einsatzalarm");
+  s.write("a");
   delay(1000 * 30);
   digitalWrite(7, LOW);
   Serial.println("---reset---");
