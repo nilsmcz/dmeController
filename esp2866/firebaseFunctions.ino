@@ -4,10 +4,6 @@
 #include <addons/RTDBHelper.h>
 #include "firebaseFunctions.h"
 
-FirebaseData fbdo;
-FirebaseAuth auth;
-FirebaseConfig config;
-
 void connectFirebaseWithEmail(String apiKey, String databaseUrl, String userEmail, String userPassword){
   config.api_key = apiKey;
   config.database_url = databaseUrl;

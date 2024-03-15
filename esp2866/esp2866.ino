@@ -23,12 +23,23 @@ void setup(){
     connectFirebaseWithEmail(API_KEY, DATABASE_URL, FIREBASE_USER_EMAIL, FIREBASE_USER_PASSWORD);
 }
 
-void loop()
-{
-        dataMillis = millis();
-        String path = "/UsersData/";
-        path += getUserUid();
-        path += "/test/int";
-        Serial.printf("Set int... %s\n", Firebase.RTDB.setInt(&fbdo, path, count++) ? "ok" : fbdo.errorReason().c_str());
-        delay(1000);
+void loop(){
+  String path = "/UsersData/" + getUserUid() + "/counter";
+  int counterValue;
+
+  if (Firebase.RTDB.getInt(&fbdo, path)) {
+
+    if (fbdo.dataTypeEnum() == firebase_rtdb_data_type_integer) {
+      counterValue = fbdo.to<int>();
+      counterValue++;
+      Firebase.RTDB.setInt(&fbdo, path, counterValue);
+    }
+
+  } else {
+    Serial.println(fbdo.errorReason());
+    Serial.println("No last counter value!");
+    Firebase.RTDB.setInt(&fbdo, path, 0);
+  }
+  
+  delay(1000);
 }
