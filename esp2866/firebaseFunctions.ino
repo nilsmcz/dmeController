@@ -1,8 +1,12 @@
 #include <Arduino.h>
-#include <ESP8266WiFi.h>
+#include <Firebase_ESP_Client.h>
 #include <addons/TokenHelper.h>
 #include <addons/RTDBHelper.h>
 #include "firebaseFunctions.h"
+
+FirebaseData fbdo;
+FirebaseAuth auth;
+FirebaseConfig config;
 
 void connectFirebaseWithEmail(String apiKey, String databaseUrl, String userEmail, String userPassword){
   config.api_key = apiKey;
@@ -20,4 +24,8 @@ void connectFirebaseWithEmail(String apiKey, String databaseUrl, String userEmai
 
 void printFirebaseClientVersion() {
   Serial.printf("Firebase Client v%s\n\n", FIREBASE_CLIENT_VERSION);
+}
+
+String getUserUid(){
+  return auth.token.uid.c_str();
 }

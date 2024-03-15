@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <FirebaseESP8266.h>
+#include <Firebase_ESP_Client.h>
 #include <addons/TokenHelper.h>
 #include <addons/RTDBHelper.h>
 #include "Secrets.h"
@@ -23,11 +23,12 @@ void setup(){
     connectFirebaseWithEmail(API_KEY, DATABASE_URL, FIREBASE_USER_EMAIL, FIREBASE_USER_PASSWORD);
 }
 
-void loop(){
-    Serial.print("loop1");
-    dataMillis = millis();
-    String path = auth.token.uid.c_str(); //<- user uid
-    path += "/test/int";
-    Serial.printf("Set int... %s\n", Firebase.setInt(fbdo, path, count++) ? "ok" : fbdo.errorReason().c_str());
-    delay(1000);
+void loop()
+{
+        dataMillis = millis();
+        String path = "/UsersData/";
+        path += getUserUid();
+        path += "/test/int";
+        Serial.printf("Set int... %s\n", Firebase.RTDB.setInt(&fbdo, path, count++) ? "ok" : fbdo.errorReason().c_str());
+        delay(1000);
 }
