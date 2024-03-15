@@ -7,8 +7,9 @@
 #include "firebaseFunctions.h"
 #include "wifiFunctions.h"
 #include <SoftwareSerial.h>
+#include "communication.h"
 
-SoftwareSerial s(12, 14);  //(RX, TX) - D6 maps to GPIO 12 and D5 maps to GPIO 14
+SoftwareSerial s(RX_PIN, TX_PIN);  
 
 FirebaseData fbdo;
 FirebaseAuth auth;
@@ -18,7 +19,7 @@ unsigned long dataMillis = 0;
 int count = 0;
 
 void setup() {
-  s.begin(9600);
+  s.begin(BAUD);
   Serial.begin(115200);
 
   connectWifi(WIFI_SSID, WIFI_PASSWORD);
