@@ -12,7 +12,7 @@ The following security rules ensure that only authenticated users can read from 
 }
 ```
 
-### Firesore Database
+### Firestore Database
 
 The following security rules ensure that only authenticated users can read from and write to the Firesore Database:
 
