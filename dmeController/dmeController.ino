@@ -3,8 +3,6 @@
 #include "timeFunctions.h"
 #include "communication.h"
 
-SoftwareSerial s(RX_PIN, TX_PIN); //(RX, TX)
-
 const int relayContact = A0;
 int relayContactValue = 0;
 
@@ -21,9 +19,12 @@ Time testAlarmTimes[] = {
 const int numAlarms = sizeof(testAlarmTimes) / sizeof(testAlarmTimes[0]);
 
 void setup() {
-  s.begin(BAUD);
   Serial.begin(4800);
+
+  initCommunication();
+
   URTCLIB_WIRE.begin();
+
   pinMode(relayContact, INPUT);
   pinMode(alarmLed, OUTPUT);
   pinMode(relayLampPin, OUTPUT);
@@ -56,7 +57,7 @@ void alarm(){
   alarmSubRic = "a";
   digitalWrite(7, HIGH);
   Serial.println("Einsatzalarm");
-  s.write("a");
+  com.write("a");
   delay(1000 * 30);
   digitalWrite(7, LOW);
   Serial.println("---reset---");

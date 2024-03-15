@@ -9,8 +9,6 @@
 #include <SoftwareSerial.h>
 #include "communication.h"
 
-SoftwareSerial s(RX_PIN, TX_PIN);  
-
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
@@ -19,8 +17,9 @@ unsigned long dataMillis = 0;
 int count = 0;
 
 void setup() {
-  s.begin(BAUD);
   Serial.begin(115200);
+
+  initCommunication();
 
   connectWifi(WIFI_SSID, WIFI_PASSWORD);
 
@@ -31,7 +30,7 @@ void setup() {
 void loop() {
   String path = "/UsersData/" + getUserUid() + "/counter";
   long counterValue = 100;
-  char alarmSubRic = s.read();
+  char alarmSubRic = com.read();
 
   if (alarmSubRic == 'a') {
     Firebase.RTDB.setInt(&fbdo, path, 100);
