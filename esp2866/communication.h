@@ -5,3 +5,5 @@
 #define BAUD 9600
 
 extern SoftwareSerial com;
+
+void receiveMessage();

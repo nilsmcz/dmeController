@@ -1,6 +1,3 @@
-#ifndef TIME_FUNCTIONS_H
-#define TIME_FUNCTIONS_H
-
 #include "Arduino.h"
 #include "uRTCLib.h"
 
@@ -20,5 +17,3 @@ void setRtcModuleTime(int second, int minute, int hour, int dayOfWeek, int dayOf
 Time getCurrentTime();
 bool isTimeWithinRange(Time time, Time reference, int timeRangeSeconds);
 bool isTimeInTimelist(Time time, Time timelist[], int numElements, int timeRangeSeconds = 0);
-
-#endif

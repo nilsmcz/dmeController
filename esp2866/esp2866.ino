@@ -8,6 +8,8 @@
 #include "wifiFunctions.h"
 #include <SoftwareSerial.h>
 #include "communication.h"
+#include <ArduinoJson.h>
+#include <TimeLib.h>
 
 FirebaseData fbdo;
 FirebaseAuth auth;
@@ -30,25 +32,48 @@ void setup() {
 void loop() {
   String path = "/UsersData/" + getUserUid() + "/counter";
   long counterValue = 100;
-  char alarmSubRic = com.read();
 
-  if (alarmSubRic == 'a') {
-    Firebase.RTDB.setInt(&fbdo, path, 100);
-    Serial.println("Einsatzalarm");
-  }
-  // if (Firebase.RTDB.getInt(&fbdo, path)) {
-
-  //   if (fbdo.dataTypeEnum() == firebase_rtdb_data_type_integer) {
-  //     counterValue = fbdo.to<int>();
-  //     counterValue++;
-  //     Firebase.RTDB.setInt(&fbdo, path, counterValue);
-  //   }
-
-  // } else {
-  //   Serial.println(fbdo.errorReason());
-  //   Serial.println("No last counter value!");
-  //   Firebase.RTDB.setInt(&fbdo, path, 0);
-  // }
-
+  receiveMessage();
   delay(100);
+}
+
+#include <ArduinoJson.h>
+
+void uploadAlertData(JsonObject& data){
+  int hour = data["hour"];
+  int minute = data["minute"];
+  int second = data["second"];
+  int day = data["day"];
+  int month = data["month"];
+  int year = data["year"];
+  year += 2000;
+
+  // Erstellen eines Zeit-Objekts
+  tmElements_t tm;
+  tm.Hour = hour;
+  tm.Minute = minute;
+  tm.Second = second;
+  tm.Day = day;
+  tm.Month = month;
+  tm.Year = year - 1970; // Jahr seit 1970
+
+  // Berechnen des Unix-Zeitstempels
+  time_t timestamp = makeTime(tm);
+
+  // Erstellen des Datum-Strings im Format "14.03.2024"
+  char dateString[11];
+  snprintf(dateString, sizeof(dateString), "%02d.%02d.%04d", day, month, year);
+
+  // Hochladen des Datums in die Firebase-Echtzeitdatenbank
+  Firebase.RTDB.setString(&fbdo, "alerts/1/date", dateString);
+
+  // Erstellen des Uhrzeit-Strings im Format "12:30:00"
+  char timeString[9];
+  snprintf(timeString, sizeof(timeString), "%02d:%02d:%02d", hour, minute, second);
+
+  // Hochladen der Uhrzeit in die Firebase-Echtzeitdatenbank
+  Firebase.RTDB.setString(&fbdo, "alerts/1/time", timeString);
+
+  // Hochladen des Zeitstempels in die Firebase-Echtzeitdatenbank
+  Firebase.RTDB.setInt(&fbdo, "alerts/1/timestamp", timestamp);
 }
