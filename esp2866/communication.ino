@@ -76,11 +76,6 @@ void receiveMessage() {
   if (com.available() > 0) {
     String message = com.readStringUntil('\n');
 
-    if(message=="�"){
-      Serial.println("Idk");
-      return;
-    }
-
     int errorCode = checkForErrorCode(message);
 
     if (errorCode != 0) {
