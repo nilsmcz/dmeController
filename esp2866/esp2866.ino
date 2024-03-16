@@ -4,10 +4,7 @@
 #include <addons/TokenHelper.h>
 #include <addons/RTDBHelper.h>
 #include "Secrets.h"
-#include "firebaseFunctions.h"
-#include "wifiFunctions.h"
 #include <SoftwareSerial.h>
-#include "communication.h"
 #include <ArduinoJson.h>
 #include <TimeLib.h>
 
@@ -30,11 +27,12 @@ void setup() {
 }
 
 void loop() {
+  receiveMessage();
   String path = "/UsersData/" + getUserUid() + "/counter";
   long counterValue = 100;
 
   receiveMessage();
-  delay(100);
+  delay(70);
 }
 
 #include <ArduinoJson.h>
@@ -76,4 +74,6 @@ void uploadAlertData(JsonObject& data){
 
   // Hochladen des Zeitstempels in die Firebase-Echtzeitdatenbank
   Firebase.RTDB.setInt(&fbdo, "alerts/1/timestamp", timestamp);
+
+  Firebase.RTDB.setInt(&fbdo, "alerts/1/testAlarm", false);
 }

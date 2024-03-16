@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "timeFunctions.h"
 #include "communication.h"
+#include "uRTCLib.h"
 
 const int relayContact = A0;
 int relayContactValue = 0;
@@ -29,18 +30,19 @@ void setup() {
 }
 
 void loop() {
+  receiveMessage();
   relayContactValue = analogRead(relayContact);
   if(relayContactValue > 1000){
     const Time alarmTime = getCurrentTime();
     char alarmSubRic = getAlarmSubRic(alarmTime);
-    Serial.println(alarmSubRic);
     if(alarmSubRic == 'a'){
       alarm(alarmTime);
     } else if(alarmSubRic == 'c'){
       testAlarm(alarmTime);
     }
   }
-  delay(100);
+  receiveMessage();
+  delay(70);
 }
 
 char getAlarmSubRic(Time alarmTime){

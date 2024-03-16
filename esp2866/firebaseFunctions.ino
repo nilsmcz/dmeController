@@ -1,9 +1,3 @@
-#include <Arduino.h>
-#include <Firebase_ESP_Client.h>
-#include <addons/TokenHelper.h>
-#include <addons/RTDBHelper.h>
-#include "firebaseFunctions.h"
-
 void connectFirebaseWithEmail(String apiKey, String databaseUrl, String userEmail, String userPassword){
   config.api_key = apiKey;
   config.database_url = databaseUrl;

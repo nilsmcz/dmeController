@@ -1,7 +1,3 @@
-#include <Arduino.h>
-#include <ESP8266WiFi.h>
-#include "wifiFunctions.h"
-
 void connectWifi(String ssid, String password){
 
   WiFi.begin(ssid, password);

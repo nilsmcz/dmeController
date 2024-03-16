@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "uRTCLib.h"
 
 // Definition der Struktur Time

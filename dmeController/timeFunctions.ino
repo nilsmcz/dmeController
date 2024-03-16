@@ -1,7 +1,4 @@
-#include "Arduino.h"
 // #include "timeFunctions.h"
-#include "uRTCLib.h"
-
 uRTCLib rtc(0x68);
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
