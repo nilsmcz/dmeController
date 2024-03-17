@@ -9,6 +9,9 @@ void initCommunication() {
 String lastMessageStorage = "";
 int resendCounter = 0;
 
+
+
+
 void sendJsonMessage(int messageType, JsonObject& jsonData) {
   DynamicJsonDocument jsonBuffer(256);
   jsonBuffer["messageType"] = messageType;
@@ -33,7 +36,7 @@ void sendErrorCode(String errorCode){
 
 void resendLastMessageStorage(){
   if(lastMessageStorage == ""){
-    Serial.print("No last message!");
+    Serial.println("No last message!");
     return;
   }
   if(resendCounter>5){
@@ -100,6 +103,8 @@ void processMessage(String jsonString) {
 
   int messageType = jsonBuffer["messageType"];
   int messageId = jsonBuffer["messageId"];
+  Serial.print("Message type: ");
+  Serial.println(messageType);
 
   JsonObject data = jsonBuffer["data"];
 

@@ -36,7 +36,7 @@ void sendErrorCode(String errorCode){
 
 void resendLastMessageStorage(){
   if(lastMessageStorage == ""){
-    Serial.print("No last message!");
+    Serial.println("No last message!");
     return;
   }
   if(resendCounter>5){
@@ -103,13 +103,15 @@ void processMessage(String jsonString) {
 
   int messageType = jsonBuffer["messageType"];
   int messageId = jsonBuffer["messageId"];
+  Serial.print("Message type: ");
+  Serial.println(messageType);
 
   JsonObject data = jsonBuffer["data"];
 
   switch (messageType) {
     case 1:
       {
-        // uploadAlertData(data);
+        uploadAlertData(data);
         break;
       }
     default:

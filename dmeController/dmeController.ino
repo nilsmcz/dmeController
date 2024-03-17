@@ -27,6 +27,8 @@ void setup() {
   pinMode(relayContact, INPUT);
   pinMode(alarmLed, OUTPUT);
   pinMode(relayLampPin, OUTPUT);
+
+  // setRtcModuleTime(0, 43, 11, 1, 17, 3, 24);
 }
 
 void loop() {
