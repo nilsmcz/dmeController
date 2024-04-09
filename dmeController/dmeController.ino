@@ -3,6 +3,9 @@
 #include "communication.h"
 #include "uRTCLib.h"
 
+#define GARAGE 1
+#define GARAGE_OPEN_SECONDS 90;
+
 const int relayContact = A0;
 int relayContactValue = 0;
 
@@ -34,15 +37,19 @@ void setup() {
 void loop() {
   receiveMessage();
   relayContactValue = analogRead(relayContact);
+
   if(relayContactValue > 1000){
+
     const Time alarmTime = getCurrentTime();
     char alarmSubRic = getAlarmSubRic(alarmTime);
+
     if(alarmSubRic == 'a'){
       alarm(alarmTime);
     } else if(alarmSubRic == 'c'){
       testAlarm(alarmTime);
     }
   }
+
   receiveMessage();
   delay(70);
 }
@@ -66,6 +73,10 @@ void alarm(Time alarmTime){
 
   digitalWrite(7, HIGH);
   Serial.println("Einsatzalarm");
+
+  openGarage(GARAGE);
+  delay(GARAGE_OPEN_SECONDS);
+  closeGarage(GARAGE);
 
   // Erstelle ein JsonObject für die Daten
   DynamicJsonDocument dataBuffer(256); // Größe des JSON-Puffers anpassen, falls erforderlich

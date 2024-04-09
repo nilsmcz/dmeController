@@ -6,6 +6,12 @@
 #define GARAGE_4_PIN -1 //RECHTS etc.
 #define GARAGE_COUNT 4
 
+// Definition der Struktur Timerange
+const int startHour = 21;
+const int startMinute = 30;
+const int endHour = 5;
+const int endMinute = 0;
+
 int garagePins[] = {GARAGE_1_PIN, GARAGE_2_PIN, GARAGE_3_PIN, GARAGE_4_PIN};
 bool garageOpenStatus[] = {false, false, false, false};
 
@@ -15,6 +21,25 @@ void initGarageControll(){
       pinMode(garagePins[i], OUTPUT);
     }
   }
+}
+
+void checkIfInControlTime(Time alarmTime){
+  const int hour = alarmTime.hour;
+  const int minute = alarmTime.minute;
+
+  if(endHour < startHour){
+    if(hour > startHour || hour < endHour){
+      return true; 
+    }
+  }
+
+  if(endHour > startHour){
+    if(hour > startHour && hour < endHour){
+      return true;
+    }
+  }
+
+  return false;
 }
 
 void openGarage(int garageNumber){
