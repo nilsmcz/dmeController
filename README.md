@@ -1,24 +1,24 @@
-# Projektbeschreibung
-Dieses Projekt kombiniert einen Arduino Uno und einen ESP8266, um eine intelligente Steuerung für Garage und Beleuchtung zu realisieren. Es reagiert auf Relais-Signale von der Swisspone DME-Ladestation, um Aktionen wie das Öffnen der Garage und die Beleuchtungssteuerung auszulösen.
+# Project Description
+This project combines an Arduino Uno and an ESP8266 to realize an intelligent control system for garage and lighting. It responds to relay signals from the Swisspone DME charging station to trigger actions such as opening the garage and controlling the lighting.
 
-Die kontinuierliche Verbindung zur Firebase-Datenbank gewährleistet eine zuverlässige Datenverwaltung. Benutzer können verschiedene Einstellungen vornehmen, einschließlich Probealarmzeiträumen und Zeitplänen für die automatische Öffnung und Schließung der Garage.
+Continuous connection to the Firebase database ensures reliable data management. Users can configure various settings, including trial alarm periods and schedules for automatic garage opening and closing.
 
-Durch das Web-UI haben Benutzer von überall aus vollständige Kontrolle über das System, einschließlich manueller Garagesteuerung. Alle Einsatzmeldungen werden protokolliert, um eine einfache Nachverfolgung und Analyse zu ermöglichen.
+Through the web UI, users have complete control over the system from anywhere, including manual garage control. All deployment reports are logged for easy tracking and analysis.
 
-## Funktionen
-* Reagiert auf Relais-Signal von Swisspone DME-Ladestation
-* Steuerung von Garage und Beleuchtung
-* Ständige Verbindung mit Firebase-Datenbank
-* Konfigurierbare Einstellungen wie Probealarmzeiträume und Öffnungs-/Schließzeiten der Garage
-* Web-UI für Fernzugriff und vollständige Kontrolle
-* Protokollierung aller Einsatzmeldungen
+## Features
+* Responds to relay signal from Swisspone DME charging station
+* Control of garage and lighting
+* Continuous connection with Firebase database
+* Configurable settings such as trial alarm periods and garage opening/closing times
+* Web UI for remote access and full control
+* Logging of all deployment reports
 
-## Installation und Verwendung
-* Klonen Sie das Repository auf Ihren lokalen Computer.
-* Konfigurieren Sie die erforderlichen Bibliotheken für Arduino Uno und ESP8266.
-* Passen Sie die Firebase-Konfiguration an, um eine Verbindung zur Datenbank herzustellen.
-* Laden Sie den Code auf Ihren Arduino Uno und ESP8266 hoch.
-* Richten Sie das Web-UI ein, um auf das System zuzugreifen und Einstellungen vorzunehmen.
+## Installation and Usage
+* Clone the repository to your local computer.
+* Configure the necessary libraries for Arduino Uno and ESP8266.
+* Customize the Firebase configuration to connect to the database.
+* Upload the code to your Arduino Uno and ESP8266.
+* Set up the web UI to access the system and configure settings.
 
 ## Firebase Security Rules
 ### Realtime Database
