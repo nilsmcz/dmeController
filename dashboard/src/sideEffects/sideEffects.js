@@ -1,4 +1,4 @@
-import { localGetTestAlarms } from '../firebase/localFunctions';
+import { localGetHistoryAlarms, localGetTestAlarms } from '../firebase/localFunctions';
 
 /**
  * Ruft die Testalarme aus der Firebase Realtime Database ab.
@@ -31,3 +31,13 @@ export async function getTestAlarms() {
     throw error;
   }
 };
+
+export async function getHistoryAlarms() {
+    try {
+      const data = await localGetHistoryAlarms();
+      return data;
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Daten:', error);
+      throw error;
+    }
+  };

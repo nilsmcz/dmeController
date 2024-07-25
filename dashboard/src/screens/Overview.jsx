@@ -13,7 +13,7 @@ export default function Overview() {
 
     // states:
     const [alarms, setAlarms] = useState([]);
-    const [alarmsLoading, setAlarmsLoading] = useState(true);
+    const [alarmsLoading, setAlarmsLoading] = useState(false);
 
 
     //useEffects:

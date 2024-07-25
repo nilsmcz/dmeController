@@ -5,6 +5,18 @@ export async function localGetTestAlarms() {
     const path = 'settings/testAlarm';
     const dataRef = ref(database, path);
     const snapshot = await get(dataRef);
+
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      throw new Error('No data available');
+    }
+}
+
+export async function localGetHistoryAlarms() {
+    const path = '/history/alarms';
+    const dataRef = ref(database, path);
+    const snapshot = await get(dataRef);
     
     if (snapshot.exists()) {
       return snapshot.val();
