@@ -1,4 +1,4 @@
-import Navigation from './Navigation';
+import Navigation from './navigation/Navigation';
 import '@mantine/core/styles.css';
 
 import { createTheme, MantineProvider } from '@mantine/core';
