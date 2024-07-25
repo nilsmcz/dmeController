@@ -1,6 +1,24 @@
 import React from 'react'
+import { useEffect } from 'react'
+import { useState } from 'react'
+
+//sideEffects:
+import { getTestAlarms } from '../sideEffects/sideEffects'
 
 export default function Overview() {
+
+    //states:
+    const [alarms, setAlarms] = useState([])
+
+    useEffect(() => {
+        const testAlarms = async () => {
+            const alarms = await getTestAlarms()
+            console.log(alarms)
+        }
+        testAlarms()
+    }, [])
+
+
   return (
     <div style={{display:"flex", justifyContent:"start", flexDirection:"column", alignItems:"start", padding:"15px", gap:"5px"}}>
 

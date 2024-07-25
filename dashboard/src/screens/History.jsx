@@ -1,12 +1,13 @@
 import React from 'react'
-import { Timeline, Text } from '@mantine/core';
+import { Text, Timeline } from '@mantine/core';
+import { IconFlame } from '@tabler/icons-react';
 
 export default function History() {
     return (
         <div style={{display:"flex", justifyContent:"start", flexDirection:"column", alignItems:"start", padding:"15px", gap:"5px"}}>
 
             <Timeline active={1} bulletSize={24} lineWidth={3} reverseActive color="gray">
-                <Timeline.Item title="New branch">
+                <Timeline.Item title="New branch" bullet={<IconFlame size="0.8rem" />}>
                     <Text c="dimmed" size="sm">You&apos;ve created new branch <Text variant="link" component="span" inherit>fix-notifications</Text> from master</Text>
                     <Text size="xs" mt={4}>2 hours ago</Text>
                 </Timeline.Item>
@@ -16,7 +17,7 @@ export default function History() {
                     <Text size="xs" mt={4}>52 minutes ago</Text>
                 </Timeline.Item>
             
-                <Timeline.Item title="Pull request" lineVariant="dashed" color="red">
+                <Timeline.Item title="Pull request" lineVariant="dashed" color="red" bullet={<IconFlame size="1.0rem" color="white"/>}>
                     <Text c="dimmed" size="sm">You&apos;ve submitted a pull request<Text variant="link" component="span" inherit>Fix incorrect notification message (#187)</Text></Text>
                     <Text size="xs" mt={4}>34 minutes ago</Text>
                 </Timeline.Item>
