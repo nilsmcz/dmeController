@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Text, Timeline } from '@mantine/core';
-import { IconFlame } from '@tabler/icons-react';
+import { IconFlame, IconBookmark } from '@tabler/icons-react';
 import { getHistoryAlarms } from '../sideEffects/sideEffects';
 import Skeleton2 from '../components/skeletons/Skeleton2';
+import { Badge } from '@mantine/core';
 
 export default function History() {
 
@@ -41,9 +42,18 @@ export default function History() {
             {historyAlarmsLoading ? (
                 <><Skeleton2/><Skeleton2/><Skeleton2/><Skeleton2/></>
             ) : (
-                <Timeline active={historyAlarms.length-1} bulletSize={24} lineWidth={3} reverseActive color="gray">
+                <Timeline active={historyAlarms.length-1} bulletSize={26} lineWidth={4} reverseActive color="gray">
                     {historyAlarms.map((alarm, index) => (
-                        <Timeline.Item key={index} title={alarm.title} bullet={<IconFlame size="1.0rem" />} color='red'>
+                        <Timeline.Item key={index} title={
+                            <>
+                              {alarm.title}{!alarm.positiv && (
+                                <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>
+                                  Negativ
+                                </Badge>
+                              )}
+                            </>}
+                            lineVariant={alarm.test ? "dashed" : "solid"}
+                            bullet={alarm.test ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color='red'>
                             {alarm.note && <Text c="dimmed" size="sm">Notiz: {alarm.note}</Text>}
                             <Text c="dimmed" size="sm">(#{alarm.uuid})</Text>
                             <Text size="xs" mt={4}>{alarmTime(alarm.timestamp)}</Text>
@@ -54,30 +64,3 @@ export default function History() {
         </div>
     );
 }
-
-
-{/* 
-    
-    <Timeline active={1} bulletSize={24} lineWidth={3} reverseActive color="gray">
-        <Timeline.Item title="New branch" bullet={<IconFlame size="0.8rem" />}>
-            <Text c="dimmed" size="sm">You&apos;ve created new branch <Text variant="link" component="span" inherit>fix-notifications</Text> from master</Text>
-            <Text size="xs" mt={4}>2 hours ago</Text>
-        </Timeline.Item>
-
-        <Timeline.Item title="Commits">
-            <Text c="dimmed" size="sm">You&apos;ve pushed 23 commits to<Text variant="link" component="span" inherit>fix-notifications branch</Text></Text>
-            <Text size="xs" mt={4}>52 minutes ago</Text>
-        </Timeline.Item>
-
-        <Timeline.Item title="Pull request" lineVariant="dashed" color="red" bullet={<IconFlame size="1.0rem" color="white"/>}>
-            <Text c="dimmed" size="sm">You&apos;ve submitted a pull request<Text variant="link" component="span" inherit>Fix incorrect notification message (#187)</Text></Text>
-            <Text size="xs" mt={4}>34 minutes ago</Text>
-        </Timeline.Item>
-
-        <Timeline.Item title="Code review">
-            <Text c="dimmed" size="sm"><Text variant="link" component="span" inherit>Robert Gluesticker</Text> left a code review on your pull request</Text>
-            <Text size="xs" mt={4}>12 minutes ago</Text>
-        </Timeline.Item>
-    </Timeline> 
-
-*/}
