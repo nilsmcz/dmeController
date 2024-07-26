@@ -46,7 +46,7 @@ export default function History() {
                     {historyAlarms.map((alarm, index) => (
                         <Timeline.Item key={index} title={
                             <>
-                              {alarm.title}{!alarm.positiv && (
+                              {alarm.title}{(alarm.positive) == false && (
                                 <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>
                                   Negativ
                                 </Badge>

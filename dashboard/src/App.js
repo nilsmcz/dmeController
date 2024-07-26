@@ -1,6 +1,7 @@
 import Navigation from './navigation/Navigation';
 import '@mantine/core/styles.css';
-
+import { Provider } from 'react-redux';
+import store from './redux/store.js';
 import { createTheme, MantineProvider } from '@mantine/core';
 
 const theme = createTheme({
@@ -11,7 +12,9 @@ const theme = createTheme({
 function App() {
   return (
     <MantineProvider theme={theme}>
-      <Navigation/>
+      <Provider store={store}>
+        <Navigation/>
+      </Provider>
     </MantineProvider>
   );
 }
