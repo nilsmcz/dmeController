@@ -4,12 +4,17 @@ import { IconFlame, IconBookmark } from '@tabler/icons-react';
 import { getHistoryAlarms } from '../sideEffects/sideEffects';
 import Skeleton2 from '../components/skeletons/Skeleton2';
 import { Badge } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { Modal } from '@mantine/core';
+import HistoryEditEntryModal from './HistoryEditEntryModal';
 
 export default function History() {
 
     // states
     const [historyAlarms, setHistoryAlarms] = useState([]);
     const [historyAlarmsLoading, setHistoryAlarmsLoading] = useState(false);
+    const [opened, { open, close }] = useDisclosure(false);
+    const [currentAlarm, setCurrentAlarm] = useState({});
 
     // useEffects
     useEffect(() => {
@@ -37,30 +42,41 @@ export default function History() {
         return ("Alarmierung am " + formattedDate + " um " + formattedTime + " Uhr");
     }
 
+    function openHistoryEditEntryModal(alarm) {
+        setCurrentAlarm(alarm);
+        open();
+    }
+
     return (
-        <div style={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start", padding: "15px", gap: "5px" }}>
-            {historyAlarmsLoading ? (
-                <><Skeleton2/><Skeleton2/><Skeleton2/><Skeleton2/></>
-            ) : (
-                <Timeline active={historyAlarms.length-1} bulletSize={26} lineWidth={4} reverseActive color="gray">
-                    {historyAlarms.map((alarm, index) => (
-                        <Timeline.Item key={index} title={
-                            <>
-                              {alarm.title}{(alarm.positive) == false && (
-                                <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>
-                                  Negativ
-                                </Badge>
-                              )}
-                            </>}
-                            lineVariant={alarm.test ? "dashed" : "solid"}
-                            bullet={alarm.test ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color='red'>
-                            {alarm.note && <Text c="dimmed" size="sm">Notiz: {alarm.note}</Text>}
-                            <Text c="dimmed" size="sm">(#{alarm.uuid})</Text>
-                            <Text size="xs" mt={4}>{alarmTime(alarm.timestamp)}</Text>
-                        </Timeline.Item>
-                    ))}
-                </Timeline>
-            )}
-        </div>
+        <>
+            <Modal opened={opened} onClose={close} title={"Alarmierung #" + currentAlarm.uuid} centered>
+                <HistoryEditEntryModal alarm={currentAlarm}/>
+            </Modal>
+
+            <div style={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start", padding: "15px", gap: "5px" }}>
+                {historyAlarmsLoading ? (
+                    <><Skeleton2/><Skeleton2/><Skeleton2/><Skeleton2/></>
+                ) : (
+                    <Timeline active={historyAlarms.length-1} bulletSize={26} lineWidth={4} reverseActive color="gray">
+                        {historyAlarms.map((alarm, index) => (
+                            <Timeline.Item onClick={()=>openHistoryEditEntryModal(alarm)} key={index} title={
+                                <>
+                                {alarm.title}{(alarm.positive) == false && (
+                                    <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>
+                                    Negativ
+                                    </Badge>
+                                )}
+                                </>}
+                                lineVariant={alarm.test ? "dashed" : "solid"}
+                                bullet={alarm.test ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color='red'>
+                                {alarm.note && <Text c="dimmed" size="sm">Notiz: {alarm.note}</Text>}
+                                <Text c="dimmed" size="sm">(#{alarm.uuid})</Text>
+                                <Text size="xs" mt={4}>{alarmTime(alarm.timestamp)}</Text>
+                            </Timeline.Item>
+                        ))}
+                    </Timeline>
+                )}
+            </div>
+        </>
     );
 }
