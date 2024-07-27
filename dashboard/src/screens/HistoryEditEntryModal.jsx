@@ -15,7 +15,7 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
     const [title, setTitle] = useState(historyAlarms[alarmUid]?.title || "");
     const [note, setNote] = useState(historyAlarms[alarmUid]?.note || "");
     const [timestamp, setTimestamp] = useState(historyAlarms[alarmUid]?.timestamp || moment().unix());
-    const [positive, setPositive] = useState(historyAlarms[alarmUid]?.positive || false);
+    const [alarmType, setAlarmType] = useState(historyAlarms[alarmUid]?.alarmType || 'positive');
 
     const [saving, setSaving] = useState(false);
 
@@ -37,7 +37,7 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
             title,
             note,
             timestamp: timestamp,
-            positive,
+            alarmType,
         };
         dispatch(updateAlarmAction(updatedAlarm));
         closeModal();
@@ -69,11 +69,12 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
                 </Text>
                 <SegmentedControl
                     data={[
-                        { label: 'Positiv', value: 'true' },
-                        { label: 'Negativ', value: 'false' },
+                        { label: 'Positiv', value: 'positive' },
+                        { label: 'Negativ', value: 'negative' },
+                        { label: 'Probealarm', value: 'test' },
                     ]}
-                    value={positive.toString()}
-                    onChange={(value) => setPositive(value === 'true')}
+                    value={alarmType}
+                    onChange={(value) => setAlarmType(value)}
                 />
             </>
 
@@ -86,7 +87,7 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
                 maxRows={10}
             />
 
-            <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={updateAlarm} loading={saving}>
+            <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={updateAlarm} loading={saving} loaderProps={{ type: 'dots' }}>
                 Speichern
             </Button>
 

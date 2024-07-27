@@ -34,6 +34,10 @@ export default function History() {
         open();
     }
 
+    function isTestAlarm(alarm) {
+        return alarm.alarmType === 'test';
+    }
+
     const alarmsArray = Object.values(historyAlarms).sort((a, b) => b.timestamp - a.timestamp);
 
     return (
@@ -50,14 +54,14 @@ export default function History() {
                         {alarmsArray.map((alarm, index) => (
                             <Timeline.Item onClick={() => openHistoryEditEntryModal(alarm.uid)} key={index} title={
                                 <>
-                                    {alarm.title}{(alarm.positive) == false && (
+                                    {alarm.title}{(alarm.alarmType) == 'negative' && (
                                         <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>
                                             Negativ
                                         </Badge>
                                     )}
                                 </>}
-                                lineVariant={alarm.test ? "dashed" : "solid"}
-                                bullet={alarm.test ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color='red'>
+                                lineVariant={isTestAlarm(alarm) ? "dashed" : "solid"}
+                                bullet={isTestAlarm(alarm) ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color={isTestAlarm(alarm) ? "gray" : "red"}>
                                 {alarm.note && <Text c="dimmed" size="sm">Notiz: {alarm.note}</Text>}
                                 <Text c="dimmed" size="sm">(#{alarm.uid})</Text>
                                 <Text size="xs" mt={4}>{alarmTime(alarm.timestamp)}</Text>
