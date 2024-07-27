@@ -1,5 +1,5 @@
 const initialState = {
-    historyAlarms: [],
+    historyAlarms: {},
     loading: false,
 };
 

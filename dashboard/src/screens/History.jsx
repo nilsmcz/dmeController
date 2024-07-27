@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Text, Timeline } from '@mantine/core';
 import { IconFlame, IconBookmark } from '@tabler/icons-react';
@@ -8,15 +8,11 @@ import { Badge } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
 import HistoryEditEntryModal from './HistoryEditEntryModal';
-import { useState } from 'react';
 
 export default function History() {
-
-    // Redux state und dispatch hook
     const dispatch = useDispatch();
     const historyAlarms = useSelector(state => state.history.historyAlarms);
     const loading = useSelector(state => state.history.loading);
-    
     const [opened, { open, close }] = useDisclosure(false);
     const [currentAlarm, setCurrentAlarm] = useState({});
 
@@ -24,7 +20,6 @@ export default function History() {
         dispatch(fetchAlarms());
     }, [dispatch]);
 
-    // function to format timestamp to readable date and time
     function alarmTime(timestamp) {
         const date = new Date(timestamp * 1000);
         const formattedDate = date.toLocaleDateString('de-DE');
@@ -37,25 +32,27 @@ export default function History() {
         open();
     }
 
+    const alarmsArray = Object.values(historyAlarms).sort((a, b) => b.timestamp - a.timestamp);
+
     return (
         <>
             <Modal opened={opened} onClose={close} title={"Alarmierung #" + currentAlarm.uid} centered>
-                <HistoryEditEntryModal alarm={currentAlarm}/>
+                <HistoryEditEntryModal alarm={currentAlarm} />
             </Modal>
 
             <div style={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start", padding: "15px", gap: "5px" }}>
                 {loading ? (
-                    <><Skeleton2/><Skeleton2/><Skeleton2/><Skeleton2/></>
+                    <><Skeleton2 /><Skeleton2 /><Skeleton2 /><Skeleton2 /></>
                 ) : (
-                    <Timeline active={historyAlarms.length - 1} bulletSize={26} lineWidth={4} reverseActive color="gray">
-                        {historyAlarms.map((alarm, index) => (
-                            <Timeline.Item onClick={()=>openHistoryEditEntryModal(alarm)} key={index} title={
+                    <Timeline active={alarmsArray.length - 1} bulletSize={26} lineWidth={4} reverseActive color="gray">
+                        {alarmsArray.map((alarm, index) => (
+                            <Timeline.Item onClick={() => openHistoryEditEntryModal(alarm)} key={index} title={
                                 <>
-                                {alarm.title}{(alarm.positive) == false && (
-                                    <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>
-                                    Negativ
-                                    </Badge>
-                                )}
+                                    {alarm.title}{(alarm.positive) == false && (
+                                        <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>
+                                            Negativ
+                                        </Badge>
+                                    )}
                                 </>}
                                 lineVariant={alarm.test ? "dashed" : "solid"}
                                 bullet={alarm.test ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color='red'>

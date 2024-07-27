@@ -35,7 +35,6 @@ export async function getTestAlarms() {
 export async function getHistoryAlarms() {
   try {
     const data = await localGetHistoryAlarms();
-    console.log(data);
     return data;
   } catch (error) {
     console.error('Fehler beim Abrufen der Daten:', error);
