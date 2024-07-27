@@ -60,7 +60,7 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
     return (
         <>
             <Modal opened={opened} onClose={close} centered withCloseButton={false} size="xs">
-                <div style={{display:"flex", flexDirection:"row", width:"100%", height:"auto"}}>
+                <div style={{display:"flex", flexDirection:"row", width:"100%", height:"100%", alignItems:"center"}}>
                     <Button variant="transparent" color="black" fullWidth onClick={()=>deleteAlarm()} loading={deleting} loaderProps={{ type: 'dots' }}>Löschen</Button>
                     <Button variant="filled" color="red" fullWidth onClick={close}>Abbrechen</Button>
                 </div>
@@ -107,13 +107,16 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
                     maxRows={10}
                 />
 
-                <div style={{display:"flex", width:"100%", justifyContent:"center", paddingTop:"10px"}}>
-                    <img src={trash} alt="trash icon" style={{ width: 'auto', height: '20px', cursor: 'pointer'}} onClick={open}/>
+                <div style={{display:"flex", flexDirection:"row"}}>
+                    <div style={{width:"66.66%"}}>
+                        <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={updateAlarm} loading={saving} loaderProps={{ type: 'dots' }} fullWidth>
+                            Speichern
+                        </Button>
+                    </div>
+                    <div style={{display:"flex", width:"auto", justifyContent:"center", paddingTop:"10px", alignItems:"center", flex:"1"}}>
+                        <img src={trash} alt="trash icon" style={{ width: 'auto', height: '20px', cursor: 'pointer'}} onClick={open}/>
+                    </div>
                 </div>
-
-                <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={updateAlarm} loading={saving} loaderProps={{ type: 'dots' }}>
-                    Speichern
-                </Button>
 
             </div>
         </>
