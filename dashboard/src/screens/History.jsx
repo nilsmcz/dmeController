@@ -1,38 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Text, Timeline } from '@mantine/core';
 import { IconFlame, IconBookmark } from '@tabler/icons-react';
-import { getHistoryAlarms } from '../sideEffects/sideEffects';
+import { fetchAlarms } from '../redux/actions/historyActions';
 import Skeleton2 from '../components/skeletons/Skeleton2';
 import { Badge } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
 import HistoryEditEntryModal from './HistoryEditEntryModal';
+import { useState } from 'react';
 
 export default function History() {
 
-    // states
-    const [historyAlarms, setHistoryAlarms] = useState([]);
-    const [historyAlarmsLoading, setHistoryAlarmsLoading] = useState(false);
+    // Redux state und dispatch hook
+    const dispatch = useDispatch();
+    const historyAlarms = useSelector(state => state.history.historyAlarms);
+    const loading = useSelector(state => state.history.loading);
+    
     const [opened, { open, close }] = useDisclosure(false);
     const [currentAlarm, setCurrentAlarm] = useState({});
 
-    // useEffects
     useEffect(() => {
-        async function fetchAlarms() {
-            setHistoryAlarmsLoading(true);
-            const fetchedAlarms = await getHistoryAlarms();
-            const sortedAlarms = sortAlarmsByTimestamp(fetchedAlarms || []);
-            setHistoryAlarms(sortedAlarms);
-            setHistoryAlarmsLoading(false);
-            console.log(sortedAlarms);
-        }
-        fetchAlarms();
-    }, []);
-
-    // sort alarms by timestamp
-    function sortAlarmsByTimestamp(alarms) {
-        return alarms.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    }
+        dispatch(fetchAlarms());
+    }, [dispatch]);
 
     // function to format timestamp to readable date and time
     function alarmTime(timestamp) {
@@ -49,15 +39,15 @@ export default function History() {
 
     return (
         <>
-            <Modal opened={opened} onClose={close} title={"Alarmierung #" + currentAlarm.uuid} centered>
+            <Modal opened={opened} onClose={close} title={"Alarmierung #" + currentAlarm.uid} centered>
                 <HistoryEditEntryModal alarm={currentAlarm}/>
             </Modal>
 
             <div style={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start", padding: "15px", gap: "5px" }}>
-                {historyAlarmsLoading ? (
+                {loading ? (
                     <><Skeleton2/><Skeleton2/><Skeleton2/><Skeleton2/></>
                 ) : (
-                    <Timeline active={historyAlarms.length-1} bulletSize={26} lineWidth={4} reverseActive color="gray">
+                    <Timeline active={historyAlarms.length - 1} bulletSize={26} lineWidth={4} reverseActive color="gray">
                         {historyAlarms.map((alarm, index) => (
                             <Timeline.Item onClick={()=>openHistoryEditEntryModal(alarm)} key={index} title={
                                 <>
@@ -70,7 +60,7 @@ export default function History() {
                                 lineVariant={alarm.test ? "dashed" : "solid"}
                                 bullet={alarm.test ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color='red'>
                                 {alarm.note && <Text c="dimmed" size="sm">Notiz: {alarm.note}</Text>}
-                                <Text c="dimmed" size="sm">(#{alarm.uuid})</Text>
+                                <Text c="dimmed" size="sm">(#{alarm.uid})</Text>
                                 <Text size="xs" mt={4}>{alarmTime(alarm.timestamp)}</Text>
                             </Timeline.Item>
                         ))}

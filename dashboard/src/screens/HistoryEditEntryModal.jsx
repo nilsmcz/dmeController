@@ -14,8 +14,6 @@ export default function HistoryEditEntryModal({ alarm }) {
     const [note, setNote] = React.useState(alarm.note);
     const [time, setTime] = useState(alarm.timestamp);
     const [positive, setPositive] = useState(alarm.positive);
-    console.log(alarm);
-
     const handleChange = (value) => {
         const timestamp = moment(value).unix();
         setTime(timestamp);
