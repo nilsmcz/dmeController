@@ -52,7 +52,7 @@ export default function History() {
                 ) : (
                     <Timeline active={alarmsArray.length - 1} bulletSize={26} lineWidth={4} reverseActive color="gray">
                         {alarmsArray.map((alarm, index) => (
-                            <Timeline.Item onClick={() => openHistoryEditEntryModal(alarm.uid)} key={index} title={
+                            <Timeline.Item style={{ cursor: 'pointer' }} onClick={() => openHistoryEditEntryModal(alarm.uid)} key={index} title={
                                 <>
                                     {alarm.title}{(alarm.alarmType) == 'negative' && (
                                         <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>
