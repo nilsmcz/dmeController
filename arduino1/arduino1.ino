@@ -11,5 +11,5 @@ void loop() {
   if(relayContactValue > 1){
     Serial.println("SIGNAL");
   }
-  delay(100);
+  delay(500);
 }
