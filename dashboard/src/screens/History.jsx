@@ -61,7 +61,7 @@ export default function History() {
                                     )}
                                 </>}
                                 lineVariant={isTestAlarm(alarm) ? "dashed" : "solid"}
-                                bullet={isTestAlarm(alarm) ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color={isTestAlarm(alarm) ? "gray" : "red"}>
+                                bullet={isTestAlarm(alarm) ? <IconBookmark size="1.2rem" /> : <IconFlame size="1.2rem" />} color={isTestAlarm(alarm) ? "rgba(176, 176, 176, 1)" : "red"}>
                                 {alarm.note && <Text c="dimmed" size="sm">Notiz: {alarm.note}</Text>}
                                 <Text c="dimmed" size="sm">(#{alarm.uid})</Text>
                                 <Text size="xs" mt={4}>{alarmTime(alarm.timestamp)}</Text>
