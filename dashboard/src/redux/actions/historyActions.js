@@ -9,3 +9,8 @@ export const fetchAlarms = () => async (dispatch) => {
         dispatch({ type: 'FETCH_ALARMS_FAILURE' });
     }
 };
+
+export const updateAlarm = (alarm) => ({
+    type: 'UPDATE_ALARM',
+    payload: alarm,
+});

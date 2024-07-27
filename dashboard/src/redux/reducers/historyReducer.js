@@ -21,6 +21,15 @@ const historyReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
             };
+        case 'UPDATE_ALARM':
+            const updatedAlarm = action.payload;
+            return {
+                ...state,
+                historyAlarms: {
+                    ...state.historyAlarms,
+                    [updatedAlarm.uid]: updatedAlarm,
+                },
+            };
         default:
             return state;
     }

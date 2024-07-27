@@ -1,46 +1,51 @@
 import React, { useEffect } from 'react';
-import { TextInput } from '@mantine/core';
-import { Textarea } from '@mantine/core';
+import { TextInput, Textarea, Button, SegmentedControl, Text } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useState } from 'react';
 import moment from 'moment';
-import { SegmentedControl } from '@mantine/core';
-import { Text } from '@mantine/core';
-import { Button } from '@mantine/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAlarms } from '../redux/actions/historyActions';
+import { fetchAlarms, updateAlarm as updateAlarmAction } from '../redux/actions/historyActions';
 
-export default function HistoryEditEntryModal({ alarmUid }) {
+export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
 
     const dispatch = useDispatch();
     const historyAlarms = useSelector(state => state.history.historyAlarms);
     const loading = useSelector(state => state.history.loading);
 
-    const [title, setTitle] = React.useState(historyAlarms[alarmUid].title);
-    const [note, setNote] = React.useState(historyAlarms[alarmUid].note);
-    const [time, setTime] = useState(historyAlarms[alarmUid].timestamp);
-    const [positive, setPositive] = useState(historyAlarms[alarmUid].positive);
+    const [title, setTitle] = useState(historyAlarms[alarmUid]?.title || "");
+    const [note, setNote] = useState(historyAlarms[alarmUid]?.note || "");
+    const [timestamp, setTimestamp] = useState(historyAlarms[alarmUid]?.timestamp || moment().unix());
+    const [positive, setPositive] = useState(historyAlarms[alarmUid]?.positive || false);
 
     const handleChange = (value) => {
         const timestamp = moment(value).unix();
-        setTime(timestamp);
-        console.log(timestamp);
+        setTimestamp(timestamp);
     };
 
     useEffect(() => {
-        if(loading) {
+        if (loading) {
             dispatch(fetchAlarms());
         }
     }, [dispatch, loading]);
 
+    function updateAlarm(){
+        const updatedAlarm = {
+            uid: alarmUid,
+            title,
+            note,
+            timestamp: timestamp,
+            positive,
+        };
+        dispatch(updateAlarmAction(updatedAlarm));
+        closeModal();
+    };
 
     return (
-        <div style={{display:"flex", flexDirection:"column", gap:"5px"}}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
 
             <TextInput
                 value={title}
                 label="Titel"
-                // description=""
                 placeholder="Titel des Alarms"
                 onChange={(event) => setTitle(event.currentTarget.value)}
             />
@@ -49,7 +54,7 @@ export default function HistoryEditEntryModal({ alarmUid }) {
                 dropdownType="modal"
                 label="Datum und Uhrzeit auswählen"
                 placeholder="Datum und Uhrzeit auswählen"
-                value={moment.unix(time).toDate()}
+                value={moment.unix(timestamp).toDate()}
                 onChange={handleChange}
                 valueFormat="DD.MM.YYYY HH:mm"
             />
@@ -70,7 +75,6 @@ export default function HistoryEditEntryModal({ alarmUid }) {
 
             <Textarea
                 label="Notiz"
-                // description=""
                 placeholder="Notiz zum Alarm"
                 value={note}
                 onChange={(event) => setNote(event.currentTarget.value)}
@@ -78,7 +82,9 @@ export default function HistoryEditEntryModal({ alarmUid }) {
                 maxRows={10}
             />
 
-            <Button variant="filled" color="red" style={{marginTop:"10px"}}>Speichern</Button>
+            <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={updateAlarm}>
+                Speichern
+            </Button>
 
         </div>
     );

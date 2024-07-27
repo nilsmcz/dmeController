@@ -39,7 +39,7 @@ export default function History() {
     return (
         <>
             <Modal opened={opened} onClose={close} title={"Alarmierung #" + currentAlarmUid} centered>
-                <HistoryEditEntryModal alarmUid={currentAlarmUid} />
+                <HistoryEditEntryModal alarmUid={currentAlarmUid} closeModal={close}/>
             </Modal>
 
             <div style={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start", padding: "15px", gap: "5px" }}>
