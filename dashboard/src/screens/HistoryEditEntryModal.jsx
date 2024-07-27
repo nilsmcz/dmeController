@@ -17,6 +17,8 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
     const [timestamp, setTimestamp] = useState(historyAlarms[alarmUid]?.timestamp || moment().unix());
     const [positive, setPositive] = useState(historyAlarms[alarmUid]?.positive || false);
 
+    const [saving, setSaving] = useState(false);
+
     const handleChange = (value) => {
         const timestamp = moment(value).unix();
         setTimestamp(timestamp);
@@ -29,6 +31,7 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
     }, [dispatch, loading]);
 
     function updateAlarm(){
+        setSaving(true);
         const updatedAlarm = {
             uid: alarmUid,
             title,
@@ -38,6 +41,7 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
         };
         dispatch(updateAlarmAction(updatedAlarm));
         closeModal();
+        setSaving(false);
     };
 
     return (
@@ -82,7 +86,7 @@ export default function HistoryEditEntryModal({ alarmUid, closeModal }) {
                 maxRows={10}
             />
 
-            <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={updateAlarm}>
+            <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={updateAlarm} loading={saving}>
                 Speichern
             </Button>
 
