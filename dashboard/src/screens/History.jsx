@@ -10,11 +10,13 @@ import { Modal } from '@mantine/core';
 import HistoryEditEntryModal from './HistoryEditEntryModal';
 
 export default function History() {
+
     const dispatch = useDispatch();
     const historyAlarms = useSelector(state => state.history.historyAlarms);
     const loading = useSelector(state => state.history.loading);
+
     const [opened, { open, close }] = useDisclosure(false);
-    const [currentAlarm, setCurrentAlarm] = useState({});
+    const [currentAlarmUid, setCurrentAlarmUid] = useState({});
 
     useEffect(() => {
         dispatch(fetchAlarms());
@@ -27,8 +29,8 @@ export default function History() {
         return ("Alarmierung am " + formattedDate + " um " + formattedTime + " Uhr");
     }
 
-    function openHistoryEditEntryModal(alarm) {
-        setCurrentAlarm(alarm);
+    function openHistoryEditEntryModal(alarmUid) {
+        setCurrentAlarmUid(alarmUid);
         open();
     }
 
@@ -36,8 +38,8 @@ export default function History() {
 
     return (
         <>
-            <Modal opened={opened} onClose={close} title={"Alarmierung #" + currentAlarm.uid} centered>
-                <HistoryEditEntryModal alarm={currentAlarm} />
+            <Modal opened={opened} onClose={close} title={"Alarmierung #" + currentAlarmUid} centered>
+                <HistoryEditEntryModal alarmUid={currentAlarmUid} />
             </Modal>
 
             <div style={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start", padding: "15px", gap: "5px" }}>
@@ -46,7 +48,7 @@ export default function History() {
                 ) : (
                     <Timeline active={alarmsArray.length - 1} bulletSize={26} lineWidth={4} reverseActive color="gray">
                         {alarmsArray.map((alarm, index) => (
-                            <Timeline.Item onClick={() => openHistoryEditEntryModal(alarm)} key={index} title={
+                            <Timeline.Item onClick={() => openHistoryEditEntryModal(alarm.uid)} key={index} title={
                                 <>
                                     {alarm.title}{(alarm.positive) == false && (
                                         <Badge color="gray" radius="sm" variant="light" style={{ marginLeft: '0.5rem' }}>

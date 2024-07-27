@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TextInput } from '@mantine/core';
 import { Textarea } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
@@ -7,18 +7,31 @@ import moment from 'moment';
 import { SegmentedControl } from '@mantine/core';
 import { Text } from '@mantine/core';
 import { Button } from '@mantine/core';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchAlarms } from '../redux/actions/historyActions';
 
-export default function HistoryEditEntryModal({ alarm }) {
+export default function HistoryEditEntryModal({ alarmUid }) {
 
-    const [title, setTitle] = React.useState(alarm.title);
-    const [note, setNote] = React.useState(alarm.note);
-    const [time, setTime] = useState(alarm.timestamp);
-    const [positive, setPositive] = useState(alarm.positive);
+    const dispatch = useDispatch();
+    const historyAlarms = useSelector(state => state.history.historyAlarms);
+    const loading = useSelector(state => state.history.loading);
+
+    const [title, setTitle] = React.useState(historyAlarms[alarmUid].title);
+    const [note, setNote] = React.useState(historyAlarms[alarmUid].note);
+    const [time, setTime] = useState(historyAlarms[alarmUid].timestamp);
+    const [positive, setPositive] = useState(historyAlarms[alarmUid].positive);
+
     const handleChange = (value) => {
         const timestamp = moment(value).unix();
         setTime(timestamp);
         console.log(timestamp);
     };
+
+    useEffect(() => {
+        if(loading) {
+            dispatch(fetchAlarms());
+        }
+    }, [dispatch, loading]);
 
 
     return (
