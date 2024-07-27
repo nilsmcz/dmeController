@@ -30,6 +30,11 @@ const historyReducer = (state = initialState, action) => {
                     [updatedAlarm.uid]: updatedAlarm,
                 },
             };
+        case 'UPDATE_ALARM_FAILURE':
+            return {
+                ...state,
+                error: action.error,
+            };
         default:
             return state;
     }

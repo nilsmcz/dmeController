@@ -1,4 +1,5 @@
 import { getHistoryAlarms } from '../../sideEffects/sideEffects';
+import { updateAlarmData } from '../../sideEffects/sideEffects';
 
 export const fetchAlarms = () => async (dispatch) => {
     dispatch({ type: 'FETCH_ALARMS_REQUEST' });
@@ -10,7 +11,11 @@ export const fetchAlarms = () => async (dispatch) => {
     }
 };
 
-export const updateAlarm = (alarm) => ({
-    type: 'UPDATE_ALARM',
-    payload: alarm,
-});
+export const updateAlarm = (alarm) => async (dispatch) => {
+    try {
+        await updateAlarmData(alarm);
+        dispatch({ type: 'UPDATE_ALARM', payload: alarm });
+    } catch (error) {
+        dispatch({ type: 'UPDATE_ALARM_FAILURE', error });
+    }
+};

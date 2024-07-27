@@ -24,3 +24,9 @@ export async function localGetHistoryAlarms() {
       throw new Error('No data available');
     }
 }
+
+export async function localUpdateAlarmData(updatedAlarm) {
+    const path = `/history/alarms/${updatedAlarm.uid}`;
+    const dataRef = ref(database, path);
+    await set(dataRef, updatedAlarm);
+}
