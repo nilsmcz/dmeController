@@ -1,4 +1,4 @@
-import { localGetHistoryAlarms, localGetTestAlarms, localUpdateAlarmData, localAddAlarmData } from '../firebase/localFunctions';
+import { localGetHistoryAlarms, localGetTestAlarms, localUpdateAlarmData, localAddAlarmData, localDeleteAlarmData } from '../firebase/localFunctions';
 
 /**
  * Ruft die Testalarme aus der Firebase Realtime Database ab.
@@ -56,6 +56,15 @@ export async function addAlarmData(newAlarm) {
     await localAddAlarmData(newAlarm);
   } catch (error) {
     console.error('Fehler beim Hinzufügen der Daten:', error);
+    throw error;
+  }
+}
+
+export async function deleteAlarmData(deletedAlarmUid) {
+  try {
+    await localDeleteAlarmData(deletedAlarmUid);
+  } catch (error) {
+    console.error('Fehler beim Löschen der Daten:', error);
     throw error;
   }
 }

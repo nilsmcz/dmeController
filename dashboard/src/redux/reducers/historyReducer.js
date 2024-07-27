@@ -49,6 +49,19 @@ const historyReducer = (state = initialState, action) => {
                 ...state,
                 error: action.error,
             }
+        case 'DELETE_ALARM':
+            const deletedAlarmUid = action.payload;
+            const newAlarms = { ...state.historyAlarms };
+            delete newAlarms[deletedAlarmUid];
+            return {
+                ...state,
+                historyAlarms: newAlarms,
+            }
+        case 'DELETE_ALARM_FAILURE':
+            return {
+                ...state,
+                error: action.error,
+            }
         default:
             return state;
     }

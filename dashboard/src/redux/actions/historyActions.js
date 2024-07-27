@@ -1,6 +1,7 @@
 import { getHistoryAlarms } from '../../sideEffects/sideEffects';
 import { updateAlarmData } from '../../sideEffects/sideEffects';
 import { addAlarmData } from '../../sideEffects/sideEffects';
+import { deleteAlarmData } from '../../sideEffects/sideEffects';
 
 export const fetchAlarms = () => async (dispatch) => {
     dispatch({ type: 'FETCH_ALARMS_REQUEST' });
@@ -27,5 +28,14 @@ export const addAlarm = (alarm) => async (dispatch) => {
         dispatch({ type: 'ADD_ALARM', payload: alarm })
     } catch (error) {
         dispatch({ type: 'ADD_ALARM_FAILURE', error })
+    }
+}
+
+export const deleteAlarm = (deletedAlarmUid) => async (dispatch) => {
+    try {
+        await deleteAlarmData(deletedAlarmUid)
+        dispatch({ type: 'DELETE_ALARM', payload: deletedAlarmUid })
+    } catch (error) {
+        dispatch({ type: 'DELETE_ALARM_FAILURE', error })
     }
 }

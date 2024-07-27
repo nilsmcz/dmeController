@@ -4,7 +4,7 @@ import { DateTimePicker } from '@mantine/dates';
 import { useState } from 'react';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAlarms, updateAlarm as updateAlarmAction } from '../redux/actions/historyActions';
+import { fetchAlarms, updateAlarm as updateAlarmAction, deleteAlarm as deleteAlarmAction } from '../redux/actions/historyActions';
 import trash from '../assets/icons/trash.svg';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
@@ -51,7 +51,7 @@ export default function HistoryEditEntryModal({ alarmUid, close }) {
 
     function deleteAlarm(){
         setDeleting(true)
-        // delete alarm
+        dispatch(deleteAlarmAction(alarmUid))
         closeConfirmation()
         close()
         setDeleting(false)
