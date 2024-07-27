@@ -1,4 +1,4 @@
-import { localGetHistoryAlarms, localGetTestAlarms, localUpdateAlarmData } from '../firebase/localFunctions';
+import { localGetHistoryAlarms, localGetTestAlarms, localUpdateAlarmData, localAddAlarmData } from '../firebase/localFunctions';
 
 /**
  * Ruft die Testalarme aus der Firebase Realtime Database ab.
@@ -50,3 +50,12 @@ export async function updateAlarmData(updatedAlarm) {
     throw error;
   }
 };
+
+export async function addAlarmData(newAlarm) {
+  try {
+    await localAddAlarmData(newAlarm);
+  } catch (error) {
+    console.error('Fehler beim Hinzufügen der Daten:', error);
+    throw error;
+  }
+}

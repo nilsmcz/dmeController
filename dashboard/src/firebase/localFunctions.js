@@ -30,3 +30,9 @@ export async function localUpdateAlarmData(updatedAlarm) {
     const dataRef = ref(database, path);
     await set(dataRef, updatedAlarm);
 }
+
+export async function localAddAlarmData(newAlarm) {
+    const path = `/history/alarms/${newAlarm.uid}`;
+    const dataRef = ref(database, path);
+    await set(dataRef, newAlarm);
+}

@@ -6,8 +6,11 @@ import { fetchAlarms } from '../redux/actions/historyActions';
 import Skeleton2 from '../components/skeletons/Skeleton2';
 import { Badge } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { Modal } from '@mantine/core';
+import { Modal, Drawer } from '@mantine/core';
 import HistoryEditEntryModal from './HistoryEditEntryModal';
+import { ActionIcon } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
+import HistorNewEntryDrawer from './HistorNewEntryDrawer';
 
 export default function History() {
 
@@ -15,8 +18,17 @@ export default function History() {
     const historyAlarms = useSelector(state => state.history.historyAlarms);
     const loading = useSelector(state => state.history.loading);
 
-    const [opened, { open, close }] = useDisclosure(false);
+    const [openedEdit, { open: openEdit, close: closeEdit }] = useDisclosure(false);
+    const [openedNew, { open: openNew, close: closeNew }] = useDisclosure(false);
+
     const [currentAlarmUid, setCurrentAlarmUid] = useState({});
+
+    const [newUid, setNewUid] = useState('00000');
+
+    const generateRandomUid = () => {
+        const number = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+        setNewUid(number);
+    };
 
     useEffect(() => {
         dispatch(fetchAlarms());
@@ -31,20 +43,35 @@ export default function History() {
 
     function openHistoryEditEntryModal(alarmUid) {
         setCurrentAlarmUid(alarmUid);
-        open();
+        openEdit();
     }
 
     function isTestAlarm(alarm) {
         return alarm.alarmType === 'test';
     }
 
+    function openNewAlarm() {
+        generateRandomUid();
+        openNew();
+    }
+
     const alarmsArray = Object.values(historyAlarms).sort((a, b) => b.timestamp - a.timestamp);
 
     return (
         <>
-            <Modal opened={opened} onClose={close} title={"Alarmierung #" + currentAlarmUid} centered>
-                <HistoryEditEntryModal alarmUid={currentAlarmUid} closeModal={close}/>
+            <Drawer opened={openedNew} onClose={closeNew} title={"Neue Alarmierung #" + newUid} position="bottom">
+                <HistorNewEntryDrawer newUid={newUid} close={closeNew}/>
+            </Drawer>
+
+            <Modal opened={openedEdit} onClose={closeEdit} title={"Alarmierung #" + currentAlarmUid} centered>
+                <HistoryEditEntryModal alarmUid={currentAlarmUid} close={closeEdit}/>
             </Modal>
+
+            <div style={{display:"flex", position:"fixed", bottom:"15px", right:"15px"}}>
+                <ActionIcon variant="filled" color="red" aria-label="add Alarm" size={45} onClick={()=>openNewAlarm()} radius="md">
+                    <IconPlus style={{ width: '70%', height: '70%' }} stroke={2.0} color='white'/>
+                </ActionIcon>
+            </div>
 
             <div style={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start", padding: "15px", gap: "5px" }}>
                 {loading ? (

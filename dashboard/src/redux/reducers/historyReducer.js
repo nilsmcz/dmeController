@@ -35,6 +35,20 @@ const historyReducer = (state = initialState, action) => {
                 ...state,
                 error: action.error,
             };
+        case 'ADD_ALARM':
+            const newAlarm = action.payload;
+            return {
+                ...state,
+                historyAlarms: {
+                    ...state.historyAlarms,
+                    [newAlarm.uid]: newAlarm,
+                },
+            }
+        case 'ADD_ALARM_FAILURE':
+            return {
+                ...state,
+                error: action.error,
+            }
         default:
             return state;
     }

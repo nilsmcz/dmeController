@@ -8,64 +8,41 @@ import { fetchAlarms, updateAlarm as updateAlarmAction } from '../redux/actions/
 import trash from '../assets/icons/trash.svg';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
+import { addAlarm } from '../redux/actions/historyActions';
 
-export default function HistoryEditEntryModal({ alarmUid, close }) {
+export default function HistorNewEntryDrawer({ newUid, close }) {
 
     const dispatch = useDispatch();
     const historyAlarms = useSelector(state => state.history.historyAlarms);
     const loading = useSelector(state => state.history.loading);
 
-    const [title, setTitle] = useState(historyAlarms[alarmUid]?.title || "");
-    const [note, setNote] = useState(historyAlarms[alarmUid]?.note || "");
-    const [timestamp, setTimestamp] = useState(historyAlarms[alarmUid]?.timestamp || moment().unix());
-    const [alarmType, setAlarmType] = useState(historyAlarms[alarmUid]?.alarmType || 'positive');
+    const [title, setTitle] = useState("");
+    const [note, setNote] = useState( "");
+    const [timestamp, setTimestamp] = useState(moment().unix());
+    const [alarmType, setAlarmType] = useState('positive');
     const [saving, setSaving] = useState(false);
-    const [deleting, setDeleting] = useState(false);
-
-    const [openedConfirmation, { open: openConfirmation, close: closeConfirmation }] = useDisclosure(false);
 
     const handleChange = (value) => {
         const timestamp = moment(value).unix();
         setTimestamp(timestamp);
     };
 
-    useEffect(() => {
-        if (loading) {
-            dispatch(fetchAlarms());
-        }
-    }, [dispatch, loading]);
-
-    function updateAlarm(){
+    function createAlarm(){
         setSaving(true);
-        const updatedAlarm = {
-            uid: alarmUid,
+        const newAlarm = {
+            uid: newUid,
             title,
             note,
             timestamp: timestamp,
             alarmType,
         };
-        dispatch(updateAlarmAction(updatedAlarm));
-        close();
-        setSaving(false);
-    };
-
-    function deleteAlarm(){
-        setDeleting(true)
-        // delete alarm
-        closeConfirmation()
+        dispatch(addAlarm(newAlarm))
         close()
-        setDeleting(false)
+        setSaving(false);
     }
 
     return (
         <>
-            <Modal opened={openedConfirmation} onClose={closeConfirmation} centered withCloseButton={false} size="xs">
-                <div style={{display:"flex", flexDirection:"row", width:"100%", height:"100%", alignItems:"center"}}>
-                    <Button variant="transparent" color="black" fullWidth onClick={()=>deleteAlarm()} loading={deleting} loaderProps={{ type: 'dots' }}>Löschen</Button>
-                    <Button variant="filled" color="red" fullWidth onClick={closeConfirmation}>Abbrechen</Button>
-                </div>
-            </Modal>
-
             <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
 
                 <TextInput
@@ -108,18 +85,11 @@ export default function HistoryEditEntryModal({ alarmUid, close }) {
                     maxRows={10}
                 />
 
-                <div style={{display:"flex", flexDirection:"row"}}>
-                    <div style={{width:"66.66%"}}>
-                        <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={updateAlarm} loading={saving} loaderProps={{ type: 'dots' }} fullWidth>
-                            Speichern
-                        </Button>
-                    </div>
-                    <div style={{display:"flex", width:"auto", justifyContent:"center", paddingTop:"10px", alignItems:"center", flex:"1"}}>
-                        <img src={trash} alt="trash icon" style={{ width: 'auto', height: '20px', cursor: 'pointer'}} onClick={openConfirmation}/>
-                    </div>
-                </div>
+                <Button variant="filled" color="red" style={{ marginTop: "10px" }} onClick={()=>createAlarm()} loading={saving} loaderProps={{ type: 'dots' }} fullWidth>
+                    Speichern
+                </Button>
 
             </div>
         </>
-    );
+    )
 }
