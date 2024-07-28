@@ -1,15 +1,28 @@
-const int relayContact = A0;
-int relayContactValue = 0;
+const int relayPin = 7;
+bool alarmDetected = false;
 
 void setup() {
-  Serial.begin(4800);
-  pinMode(relayContact, INPUT);
+  Serial.begin(115200);
+  pinMode(relayPin, INPUT);
 }
 
 void loop() {
-  relayContactValue = analogRead(relayContact);
-  if(relayContactValue > 1){
-    Serial.println("SIGNAL");
+  int schalterZustand = digitalRead(relayPin);
+
+  if(schalterZustand == HIGH) {
+    if(alarmDetected == false) {
+      Serial.println("Alarm erkannt");
+      alarmDetected = true;
+    } else {
+      Serial.println("Alarm aktiv");
+      delay(1000);
+    }
   }
-  delay(500);
+  else if (schalterZustand == LOW) {
+    if(alarmDetected == true) {
+      Serial.println("Alarm beendet");
+      alarmDetected = false;
+    }
+  }
+  
 }
