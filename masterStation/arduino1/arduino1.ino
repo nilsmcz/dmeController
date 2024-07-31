@@ -1,6 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #define LED_CONTROL_PIN 8
-#define NUM_OF_LEDS 60
+#define NUM_OF_LEDS 100
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_OF_LEDS, LED_CONTROL_PIN, NEO_RGB + NEO_KHZ800);
 
 const int relayPin = 7;
@@ -21,7 +21,7 @@ void loop() {
     if(alarmDetected == false) {
       Serial.println("Alarm erkannt");
       alarmDetected = true;
-      setStripColor(100, 100, 100); // Set the strip to blue color when alarm is detected
+      setStripColor(240, 240, 240); // Set the strip to blue color when alarm is detected
     } else {
       Serial.println("Alarm aktiv");
       delay(1000);
@@ -46,7 +46,7 @@ void clearStrip() {
 
 void setStripColor(uint8_t r, uint8_t g, uint8_t b) {
   for(int i = 0; i < NUM_OF_LEDS; i++) {
-    strip.setPixelColor(i, strip.Color(r, g, b)); // Set all LEDs to the given color
+    strip.setPixelColor(i, strip.Color(g, r, b)); // Set all LEDs to the given color
   }
   strip.show(); // Update the strip to show the new color
 }
