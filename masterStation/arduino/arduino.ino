@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include "led_control.h"
 
+//LED STRIP 1
 #define LED_CONTROL_PIN 8
-#define NUM_OF_LEDS 2
+#define COUNT_OF_LEDS 2
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(COUNT_OF_LEDS, LED_CONTROL_PIN, NEO_RGB + NEO_KHZ800);
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_OF_LEDS, LED_CONTROL_PIN, NEO_RGB + NEO_KHZ800);
-
+//ALARM DETECTOR
 const int relayPin = 7;
 bool alarmDetected = false;
 
