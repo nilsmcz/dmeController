@@ -1,6 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #define LED_CONTROL_PIN 8
-#define NUM_OF_LEDS 100
+#define NUM_OF_LEDS 2
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_OF_LEDS, LED_CONTROL_PIN, NEO_RGB + NEO_KHZ800);
 
 const int relayPin = 7;
